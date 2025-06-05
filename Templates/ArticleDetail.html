@@ -1,0 +1,42 @@
+<!-- Templates/ArticleDetail.html -->
+
+{% extends "Base.html" %}
+
+{% block title %}기사 상세 및 요약 확인{% endblock %}
+
+{% block content %}
+<h2>{{ item.site }} – {{ item.title }}</h2>
+<p style="font-size:0.9em; color:#555;">
+    발행일: {{ item.published.strftime("%Y-%m-%d") }} | 원문 <a href="{{ item.link }}" target="_blank">바로가기</a>
+</p>
+<hr />
+
+{% if image_url %}
+<div style="text-align:center; margin:20px 0;">
+    <img src="{{ image_url }}" alt="대표 이미지" style="max-width:100%; height:auto;" />
+    {% if image_credit %}
+    <p style="font-size:0.8em; color:#777; margin-top:5px;">출처: {{ image_credit }}</p>
+    {% endif %}
+</div>
+{% endif %}
+
+<div style="margin-bottom:20px;">
+    <h3>본문 일부 (스크롤 가능)</h3>
+    <div style="max-height:300px; overflow-y:scroll; padding:10px; border:1px solid #ddd;">
+        {{ body_text[:1000] }}… <!-- 예시: 첫 1000자만 보여주고 “…” 표시 -->
+    </div>
+</div>
+
+<form action="/article/{{ item.index }}/post" method="post">
+    <div style="margin-bottom:20px;">
+        <h3>자동 생성된 3줄 요약</h3>
+        <textarea name="summary" rows="6" style="width:100%;">{{ summary }}</textarea>
+        <p style="font-size:0.8em; color:#777;">※ 수정 후 “포스팅” 버튼을 눌러주세요.</p>
+    </div>
+
+    <button type="submit" style="padding:10px 20px; background:#007acc; color:#fff; border:none; border-radius:4px;">
+        포스팅
+    </button>
+    <a href="/" style="margin-left:15px; color:#007acc;">← 목록으로 돌아가기</a>
+</form>
+{% endblock %}
