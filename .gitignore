@@ -1,0 +1,21 @@
+# Python 관련
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Conda 환경은 프로젝트 내부가 아니므로 별도 ignore 불필요
+
+# Jupyter
+*.ipynb_checkpoints
+
+# macOS 숨김 파일
+.DS_Store
+
+# VSCode (선택)
+.vscode/
+
+# 로그 파일
+*.log
+
+# 환경 변수 파일
+.env
