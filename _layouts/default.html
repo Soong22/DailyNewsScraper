@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title }} – {{ site.title }}</title>
+  <style>
+    /* 간단한 기본 스타일: 필요에 따라 직접 수정하세요 */
+    body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 0; background: #f9f9f9; color: #333; }
+    header { background: #007acc; padding: 1em; color: #fff; }
+    header h1 { margin: 0; font-size: 1.5em; }
+    main { max-width: 800px; margin: 2em auto; padding: 0 1em; background: #fff; border-radius: 8px; box-shadow: 0 0 4px rgba(0,0,0,0.1); }
+    footer { text-align: center; margin: 2em 0; color: #777; font-size: 0.9em; }
+    a { color: #007acc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><a href="{{ '/' | relative_url }}" style="color:inherit;">{{ site.title }}</a></h1>
+  </header>
+  <main>
+    {{ content }}
+  </main>
+  <footer>
+    &copy; {{ site.time | date: "%Y" }} {{ site.title }}. All rights reserved.
+  </footer>
+</body>
+</html>
