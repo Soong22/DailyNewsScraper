@@ -1,0 +1,21 @@
+<!-- Templates/Index.html -->
+
+{% extends "Base.html" %}
+
+{% block title %}미처리 IT 뉴스 목록{% endblock %}
+
+{% block content %}
+<h2>❏ 최근 {{ days }}일 내 미처리 뉴스</h2>
+{% if candidates|length == 0 %}
+<p>처리할 뉴스가 없습니다.</p>
+{% else %}
+<ul>
+    {% for item in candidates %}
+    <li>
+        [{{ item.index }}] {{ item.published.strftime("%Y-%m-%d") }} –
+        {{ item.title }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
