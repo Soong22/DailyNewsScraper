@@ -3,3 +3,4 @@
 title: Daily News Blog
 description: 자동으로 스크랩된 IT 뉴스 요약 블로그
 theme: minima        # 깔끔한 기본 Jekyll 테마. 없어도 동작하지만, 시각적으로 보기 좋습니다.
+permalink: /:year-:month-:day-:title.html
