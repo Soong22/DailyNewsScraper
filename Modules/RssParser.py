@@ -5,6 +5,14 @@ from datetime import datetime, timedelta
 
 PROCESSED_FILE = "processed.json"
 
+# (1) RSS_URL→사이트명 매핑 추가
+RSS_FEED_SITES = {
+    "https://www.itworld.co.kr/feed/": "ITWorld",
+    "https://yozm.wishket.com/magazine/feed/": "요즘IT",
+    "https://bloter.net/rss/news": "블로터",
+    # "https://moji.or.kr/feed/": "뭐지",  # 필요 시 추가
+}
+
 def load_processed_links(path: str = PROCESSED_FILE):
     if not os.path.exists(path):
         return []
@@ -21,20 +29,21 @@ def parse_rss_feeds(rss_urls):
     entries = []
     for url in rss_urls:
         feed = feedparser.parse(url)
+        site_name = RSS_FEED_SITES.get(url, "Unknown")  # 맵핑이 없으면 "Unknown"
         for entry in feed.entries:
             pub = None
-            # (1) published_parsed 우선 시도
+            # (a) published_parsed
             if hasattr(entry, "published_parsed") and entry.published_parsed:
                 pub = datetime(*entry.published_parsed[:6]).date()
-            # (2) updated_parsed 시도
+            # (b) updated_parsed
             elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
                 pub = datetime(*entry.updated_parsed[:6]).date()
-            # (3) published 문자열을 다양한 포맷으로 파싱 시도
+            # (c) published 문자열을 여러 포맷으로 시도
             elif hasattr(entry, "published"):
                 for fmt in (
-                    "%a, %d %b %Y %H:%M:%S %z",   # ex. Tue, 10 Jun 2025 12:34:56 +0900
-                    "%Y-%m-%dT%H:%M:%SZ",        # ex. 2025-06-10T03:22:10Z
-                    "%Y-%m-%d %H:%M:%S"          # ex. 2025-06-10 12:34:56
+                    "%a, %d %b %Y %H:%M:%S %z",
+                    "%Y-%m-%dT%H:%M:%SZ",
+                    "%Y-%m-%d %H:%M:%S"
                 ):
                     try:
                         pub = datetime.strptime(entry.published, fmt).date()
@@ -44,16 +53,15 @@ def parse_rss_feeds(rss_urls):
             entries.append({
                 "title": entry.get("title", "").strip(),
                 "link": entry.get("link", "").strip(),
-                "published": pub
+                "published": pub,
+                "site": site_name  # (2) site 필드 추가
             })
     return entries
 
 def filter_recent_articles(all_entries, days=3):
     today = datetime.now().date()
     cutoff = today - timedelta(days=days)
-    # published가 None인 항목은 제외
-    recent = [e for e in all_entries if e["published"] and e["published"] >= cutoff]
-    return recent
+    return [e for e in all_entries if e["published"] and e["published"] >= cutoff]
 
 def get_unprocessed_candidates(rss_urls, days, processed_links):
     all_entries = parse_rss_feeds(rss_urls)
@@ -66,7 +74,8 @@ def get_unprocessed_candidates(rss_urls, days, processed_links):
                 "index": idx,
                 "title": entry["title"],
                 "link": entry["link"],
-                "published": entry["published"]
+                "published": entry["published"],
+                "site": entry["site"]  # (3) site도 넘겨줌
             })
             idx += 1
     return candidates
