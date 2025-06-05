@@ -6,16 +6,33 @@
 
 {% block content %}
 <h2>❏ 최근 {{ days }}일 내 미처리 뉴스</h2>
+
 {% if candidates|length == 0 %}
 <p>처리할 뉴스가 없습니다.</p>
 {% else %}
-<ul>
-    {% for item in candidates %}
-    <li>
-        [{{ item.index }}] {{ item.published.strftime("%Y-%m-%d") }} –
-        {{ item.title }}
-    </li>
-    {% endfor %}
-</ul>
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width:100%;">
+    <thead style="background:#f0f0f0;">
+        <tr>
+            <th style="width: 5%;">번호</th>
+            <th style="width: 15%;">발행일</th>
+            <th style="width: 15%;">출처</th> <!-- (5) site 컬럼 추가 -->
+            <th>제목</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in candidates %}
+        <tr>
+            <td style="text-align:center;">{{ item.index }}</td>
+            <td style="text-align:center;">
+                {{ item.published.strftime("%Y-%m-%d") if item.published else "-" }}
+            </td>
+            <td style="text-align:center;">
+                {{ item.site }}
+            </td>
+            <td>{{ item.title }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endif %}
 {% endblock %}
