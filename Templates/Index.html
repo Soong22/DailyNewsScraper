@@ -13,9 +13,9 @@
 <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width:100%;">
     <thead style="background:#f0f0f0;">
         <tr>
-            <th style="width: 5%;">번호</th>
-            <th style="width: 15%;">발행일</th>
-            <th style="width: 15%;">출처</th> <!-- (5) site 컬럼 추가 -->
+            <th style="width:5%;">번호</th>
+            <th style="width:15%;">발행일</th>
+            <th style="width:15%;">출처</th>
             <th>제목</th>
         </tr>
     </thead>
@@ -26,10 +26,13 @@
             <td style="text-align:center;">
                 {{ item.published.strftime("%Y-%m-%d") if item.published else "-" }}
             </td>
-            <td style="text-align:center;">
-                {{ item.site }}
+            <td style="text-align:center;">{{ item.site }}</td>
+            <!-- 제목 부분에 링크 추가 -->
+            <td>
+                <a href="/article/{{ item.index }}" style="text-decoration:none; color:#007acc;">
+                    {{ item.title }}
+                </a>
             </td>
-            <td>{{ item.title }}</td>
         </tr>
         {% endfor %}
     </tbody>
