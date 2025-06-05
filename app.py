@@ -1,23 +1,23 @@
+# app.py
+
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from Modules.RssParser import load_processed_links, get_unprocessed_candidates
 
 app = FastAPI()
 templates = Jinja2Templates(directory="Templates")
+app.mount("/static", StaticFiles(directory="Static"), name="static")
 
-# RSS 피드 URL 리스트
+# (4) RSS 피드 URL 목록 (keys는 parse_rss_feeds의 RSS_FEED_SITES와 일치해야 함)
 RSS_FEEDS = [
-    "https://zdnet.co.kr/rss/",
-    "https://www.itworld.co.kr/service/rss/rss.asp",
-    "https://www.bloter.net/rss"
+    "https://www.itworld.co.kr/feed/",
+    "https://yozm.wishket.com/magazine/feed/",
+    "https://bloter.net/rss/news",
 ]
 
 @app.get("/")
 def index(request: Request, days: int = 3):
-    """
-    메인 페이지: recent N일 범위 내, 아직 처리되지 않은 IT 뉴스 목록을 보여줌
-    - days: query parameter로 받으며 default=3일
-    """
     processed_links = load_processed_links()
     candidates = get_unprocessed_candidates(
         rss_urls=RSS_FEEDS,
